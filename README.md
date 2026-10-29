@@ -9,7 +9,7 @@ başına çalışır. Konular zamanla tek tek eklenir.
 - .NET güncel LTS (`net10.0`), tek solution: `DotnetBackendLab.sln`.
 - Her konu kendi klasöründe: konsol örnekleri + xUnit testleri + README + notlar.
 - Konsol uygulaması menüyle açılır; numarayla doğrudan örnek de çalışır.
-- Örnekler kargo alanından (kargo, şube, takip numarası, kurye). Kod/isimler İngilizce, yorum/çıktı Türkçe.
+- Örnekler hayattan; her konu için o konuyu en iyi anlatan alan kullanılır. Kod/isimler İngilizce, yorum/çıktı Türkçe.
 - Her push'ta GitHub Actions: `restore → build → test`.
 
 ## Konular

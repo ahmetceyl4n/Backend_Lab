@@ -8,7 +8,7 @@ Konular zamanla tek tek eklenir.
 
 - .NET güncel LTS sürümü kullanılır (`net10.0`). Tek solution: `DotnetBackendLab.sln`.
 - Kod, tip ve dosya adları **İngilizce**; yorumlar ve konsol çıktıları **Türkçe**.
-- Örnekler **kargo alanından** seçilir (kargo, şube, takip numarası, kurye). Restoran benzetmesi kullanılmaz.
+- Örnekler **hayattan** seçilir; her konu için o konuyu en iyi anlatan alan kullanılır (ör. kargo, bankacılık, e-ticaret, rezervasyon...). Tek bir alana bağlı kalma zorunluluğu yoktur.
 - Her örnek kısadır (tek dosya, 40–100 satır) ve **sonucu + süreyi** ekrana net yazar.
 - Ortak ayarlar `Directory.Build.props` içindedir: nullable açık, uyarılar görünür.
 - GitHub Actions her push'ta `restore → build → test` çalıştırır (`setup-dotnet`, `10.0.x`).

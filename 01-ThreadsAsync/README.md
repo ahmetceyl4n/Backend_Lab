@@ -1,8 +1,8 @@
 # 01 - ThreadsAsync
 
 Thread, ThreadPool, Task, `async`/`await`, paralellik, eşzamanlılık sınırlama ve senkronizasyon
-konularını çalıştırılabilir örneklerle gösterir. Örnekler kargo alanından (kargo, şube, takip
-numarası, kurye) seçilmiştir.
+konularını çalıştırılabilir örneklerle gösterir. Bu konudaki örnekler çoğunlukla kargo/lojistik
+alanından (kargo, şube, takip numarası, kurye) seçilmiştir.
 
 ## Çalıştırma
 
