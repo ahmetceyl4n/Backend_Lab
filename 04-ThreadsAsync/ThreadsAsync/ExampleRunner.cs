@@ -31,7 +31,7 @@ public sealed class ExampleRunner
     public void PrintMenu()
     {
         Console.WriteLine();
-        Console.WriteLine("=== 01-ThreadsAsync Örnekleri ===");
+        Console.WriteLine("=== 04-ThreadsAsync Örnekleri ===");
         foreach (var e in _examples)
         {
             Console.WriteLine($"  {e.Number,2}. {e.Title}");

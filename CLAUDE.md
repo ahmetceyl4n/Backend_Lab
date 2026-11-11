@@ -25,11 +25,14 @@ NN-Konu/
   Konu.Tests/            # xUnit test projesi
 ```
 
-- Klasör adı sıralıdır ve rakamla başlar: `01-ThreadsAsync`, `02-ConcurrentCollections`, ...
-- Proje ve namespace adları **rakamla başlamaz**:
+- Klasör adı konu numarasıyla başlar: `01-CSharpFundamentals`, `04-ThreadsAsync`, `15-ConcurrentCollections`, ...
+- **Numaralandırma kuralı:** konu numaraları kullanıcının çalışma listesindeki sırayı izler (aşağıdaki
+  "Konular" tablosu, 01–20). Numara konuya sabittir; konular hangi sırayla eklenirse eklensin değişmez,
+  araya boşluk kalması normaldir. Yeni konu eklerken numarayı bu tablodan al.
+- Proje ve namespace adları **rakamla başlamaz** ve klasör numarası değişse bile değişmez:
   - `Konu.csproj` → `RootNamespace: DotnetBackendLab.Konu`
   - `Konu.Tests.csproj` → `RootNamespace: DotnetBackendLab.Konu.Tests`
-  - Örnek: `02-ConcurrentCollections/ConcurrentCollections/` ve `02-ConcurrentCollections/ConcurrentCollections.Tests/`.
+  - Örnek: `15-ConcurrentCollections/ConcurrentCollections/` ve `15-ConcurrentCollections/ConcurrentCollections.Tests/`.
 - Notlar her konunun `NOTES.md` dosyasındadır; ayrı bir `docs/` klasörü yoktur.
 
 ## Konsol uygulaması davranışı
@@ -59,4 +62,23 @@ Tabloda her konunun **klasörüne** ve **NOTES.md** dosyasına link bulunur.
 
 | No | Konu | Durum |
 |----|------|-------|
-| 01 | ThreadsAsync | Geliştiriliyor |
+| 01 | C# dil temelleri (CSharpFundamentals) | Hazır |
+| 02 | SOLID ve design pattern'ler | Planlandı |
+| 03 | ASP.NET Core temelleri | Planlandı |
+| 04 | Thread/Task/async (ThreadsAsync) | Hazır |
+| 05 | EF Core | Planlandı |
+| 06 | SQL | Planlandı |
+| 07 | Algoritma | Planlandı |
+| 08 | HTTP ve REST | Planlandı |
+| 09 | Uygulama mimarisi | Planlandı |
+| 10 | Kimlik doğrulama | Planlandı |
+| 11 | Test | Planlandı |
+| 12 | Cache ve Redis | Planlandı |
+| 13 | Git ve code review | Planlandı |
+| 14 | RabbitMQ | Planlandı |
+| 15 | Concurrent koleksiyonlar | Planlandı |
+| 16 | Arka plan işleri | Planlandı |
+| 17 | Güvenlik | Planlandı |
+| 18 | Canlıya çıkış | Planlandı |
+| 19 | Dağıtık sistem desenleri | Planlandı |
+| 20 | Performans | Planlandı |

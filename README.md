@@ -16,7 +16,28 @@ başına çalışır. Konular zamanla tek tek eklenir.
 
 | No | Konu | Klasör | Notlar | Durum |
 |----|------|--------|--------|-------|
-| 01 | Threads & Async | [01-ThreadsAsync](01-ThreadsAsync/) | [NOTES.md](01-ThreadsAsync/NOTES.md) | ✅ Hazır |
+| 01 | C# dil temelleri | [01-CSharpFundamentals](01-CSharpFundamentals/) | [NOTES.md](01-CSharpFundamentals/NOTES.md) | ✅ Hazır |
+| 02 | SOLID ve design pattern'ler | — | — | Planlandı |
+| 03 | ASP.NET Core temelleri | — | — | Planlandı |
+| 04 | Thread/Task/async | [04-ThreadsAsync](04-ThreadsAsync/) | [NOTES.md](04-ThreadsAsync/NOTES.md) | ✅ Hazır |
+| 05 | EF Core | — | — | Planlandı |
+| 06 | SQL | — | — | Planlandı |
+| 07 | Algoritma | — | — | Planlandı |
+| 08 | HTTP ve REST | — | — | Planlandı |
+| 09 | Uygulama mimarisi | — | — | Planlandı |
+| 10 | Kimlik doğrulama | — | — | Planlandı |
+| 11 | Test | — | — | Planlandı |
+| 12 | Cache ve Redis | — | — | Planlandı |
+| 13 | Git ve code review | — | — | Planlandı |
+| 14 | RabbitMQ | — | — | Planlandı |
+| 15 | Concurrent koleksiyonlar | — | — | Planlandı |
+| 16 | Arka plan işleri | — | — | Planlandı |
+| 17 | Güvenlik | — | — | Planlandı |
+| 18 | Canlıya çıkış | — | — | Planlandı |
+| 19 | Dağıtık sistem desenleri | — | — | Planlandı |
+| 20 | Performans | — | — | Planlandı |
+
+Numaralar çalışma listemdeki sırayı izler ve konuya sabittir; konular hangi sırayla eklenirse eklensin numara değişmez.
 
 ## Çalıştırma
 
@@ -26,10 +47,10 @@ dotnet build DotnetBackendLab.sln
 dotnet test DotnetBackendLab.sln
 
 # Bir konunun örneklerini menüyle çalıştır
-dotnet run --project 01-ThreadsAsync/ThreadsAsync
+dotnet run --project 04-ThreadsAsync/ThreadsAsync
 
 # Doğrudan bir örnek
-dotnet run --project 01-ThreadsAsync/ThreadsAsync -- 6
+dotnet run --project 04-ThreadsAsync/ThreadsAsync -- 6
 ```
 
 ## Depo düzeni
@@ -42,5 +63,5 @@ NN-Konu/
   Konu.Tests/          # xUnit test projesi  (RootNamespace: DotnetBackendLab.Konu.Tests)
 ```
 
-Klasör adları sıralıdır (`01-ThreadsAsync`); proje ve namespace adları rakamla başlamaz.
+Klasör adları konu numarasıyla başlar (`01-CSharpFundamentals`, `04-ThreadsAsync`); proje ve namespace adları rakamla başlamaz.
 Düzen kuralları ve çalışma tarzı için `CLAUDE.md` dosyasına bakın.
