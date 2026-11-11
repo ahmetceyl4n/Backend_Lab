@@ -20,7 +20,8 @@ Konular zamanla tek tek eklenir.
 ```
 NN-Konu/
   README.md              # örnek listesi, çalıştırma komutu, örnek çıktı
-  NOTES.md               # kullanıcının notları — sadece boş başlıklarla oluşturulur, içeriği kullanıcı yazar
+  NN-konu-notlar.md      # kullanıcının konu notları — kullanıcı yazar ve ekler
+  NN-konu-sorular.md     # kullanıcının mülakat soruları — kullanıcı yazar ve ekler
   Konu/                  # konsol projesi
   Konu.Tests/            # xUnit test projesi
 ```
@@ -33,7 +34,11 @@ NN-Konu/
   - `Konu.csproj` → `RootNamespace: DotnetBackendLab.Konu`
   - `Konu.Tests.csproj` → `RootNamespace: DotnetBackendLab.Konu.Tests`
   - Örnek: `15-ConcurrentCollections/ConcurrentCollections/` ve `15-ConcurrentCollections/ConcurrentCollections.Tests/`.
-- Notlar her konunun `NOTES.md` dosyasındadır; ayrı bir `docs/` klasörü yoktur.
+- Notlar ve mülakat soruları her konunun kendi klasöründedir; ayrı bir `docs/` klasörü yoktur.
+  - Dosya adları küçük harf ve tirelidir: `01-csharp-fundamentals-notlar.md`, `01-csharp-fundamentals-sorular.md`.
+  - Bu iki dosyanın **içeriğini kullanıcı yazar**; Claude içeriklerini değiştirmez, sadece linklerini günceller.
+  - Kullanıcı bu dosyaları eklemeden önce konu klasöründe not dosyası oluşturulmaz.
+  - `04-ThreadsAsync` henüz eski düzende (boş `NOTES.md`); kullanıcı notlarını eklediğinde yeni adlandırmaya geçer.
 
 ## Konsol uygulaması davranışı
 
@@ -49,8 +54,8 @@ NN-Konu/
 
 ## Kök README
 
-Reponun amacını ve konular tablosunu içerir: `no | konu | klasör | notlar (NOTES.md) | durum`.
-Tabloda her konunun **klasörüne** ve **NOTES.md** dosyasına link bulunur.
+Reponun amacını ve konular tablosunu içerir: `no | konu | klasör | notlar | mülakat soruları | durum`.
+Tabloda her konunun **klasörüne**, **notlar** ve **sorular** dosyasına link bulunur (henüz yoksa `—`).
 
 ## Çalışma tarzı
 

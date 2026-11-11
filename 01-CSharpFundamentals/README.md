@@ -78,6 +78,7 @@ dotnet test CSharpFundamentals.Tests
 > Not: Süre ve bellek ölçen kısımlar (Boxing, StringBuilder) ile finalizer'ın ne zaman çalıştığı makineye
 > ve GC'ye bağlı olduğu için test edilmez; yalnızca konsol örneğinde gösterilir.
 
-## Notlarım
+## Notlarım ve mülakat soruları
 
-Konuya dair kişisel notlar: [NOTES.md](NOTES.md)
+- [Notlar](01-csharp-fundamentals-notlar.md): konu anlatımı, örnekler ve her bölümün sonunda mülakat notu
+- [Mülakat soruları](01-csharp-fundamentals-sorular.md): cevapları gizli sorular (⭐ sık sorulan, 🧩 kod / tuzak sorusu)
