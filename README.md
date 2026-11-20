@@ -17,7 +17,7 @@ başına çalışır. Konular zamanla tek tek eklenir.
 | No | Konu | Klasör | Notlar | Mülakat soruları | Durum |
 |----|------|--------|--------|------------------|-------|
 | 01 | C# dil temelleri | [01-CSharpFundamentals](01-CSharpFundamentals/) | [Notlar](01-CSharpFundamentals/01-csharp-fundamentals-notlar.md) | [Sorular](01-CSharpFundamentals/01-csharp-fundamentals-sorular.md) | ✅ Hazır |
-| 02 | SOLID ve design pattern'ler | — | — | — | Planlandı |
+| 02 | SOLID ve design pattern'ler | [02-SolidPatterns](02-SolidPatterns/) | — | — | 🚧 Geliştiriliyor |
 | 03 | ASP.NET Core temelleri | — | — | — | Planlandı |
 | 04 | Thread/Task/async | [04-ThreadsAsync](04-ThreadsAsync/) | [NOTES.md](04-ThreadsAsync/NOTES.md) | — | ✅ Hazır |
 | 05 | EF Core | — | — | — | Planlandı |

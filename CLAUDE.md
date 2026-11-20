@@ -68,7 +68,7 @@ Tabloda her konunun **klasörüne**, **notlar** ve **sorular** dosyasına link b
 | No | Konu | Durum |
 |----|------|-------|
 | 01 | C# dil temelleri (CSharpFundamentals) | Hazır |
-| 02 | SOLID ve design pattern'ler | Planlandı |
+| 02 | SOLID ve design pattern'ler (SolidPatterns) | Geliştiriliyor |
 | 03 | ASP.NET Core temelleri | Planlandı |
 | 04 | Thread/Task/async (ThreadsAsync) | Hazır |
 | 05 | EF Core | Planlandı |
