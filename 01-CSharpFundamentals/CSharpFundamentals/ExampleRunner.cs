@@ -24,6 +24,8 @@ public sealed class ExampleRunner
             new Example10_ExceptionHandling(),
             new Example11_DisposableAndGc(),
             new Example12_StringAndEquality(),
+            new Example13_Collections(),
+            new Example14_HashCodeEquality(),
         ];
     }
 

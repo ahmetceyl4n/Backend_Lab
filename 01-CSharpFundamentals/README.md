@@ -3,7 +3,7 @@
 C# dilinin mülakatlarda en çok sorulan temellerini çalıştırılabilir örneklerle gösterir: değer ve
 referans tipleri, parametre geçişi, boxing, class/struct/record eşitliği, interface ve abstract class,
 generics, delegate ve event, LINQ'in ertelenmiş çalışması, exception yönetimi, IDisposable ve GC,
-string ve sabitler. Örnekler kargo alanından (paket, gönderi, şube, kurye, takip numarası) seçilmiştir.
+string ve sabitler, koleksiyonlar ve GetHashCode. Örnekler kargo alanından (paket, gönderi, şube, kurye, takip numarası) seçilmiştir.
 
 ## Çalıştırma
 
@@ -31,6 +31,8 @@ dotnet run --project CSharpFundamentals -- 9
 | 10 | ExceptionHandling | try/catch/finally sırası, `when` filtresi, özel exception, `throw` vs `throw ex` stack trace farkı |
 | 11 | DisposableAndGc | `using` ve `using var` ile Dispose zamanı, finalizer'ın belirsiz zamanı, GC nesilleri ve LOH |
 | 12 | StringAndEquality | String değişmezliği, `+` vs `StringBuilder`, `const` vs `readonly`, nullable reference types |
+| 13 | Collections | Dizi, List, Dictionary, HashSet, Queue, Stack; `List.Contains` vs `HashSet.Contains`, `FirstOrDefault` vs `Dictionary`, başa vs sona ekleme süreleri |
+| 14 | HashCodeEquality | `Equals` var `GetHashCode` yok → HashSet'te Count = 2; doğru hali Count = 1; eklendikten sonra değişen anahtarın bulunamaması |
 
 Bazı örneklerde derleme hatası veren satırlar **yorum satırı** olarak bırakıldı (ör. `// r1.Weight = 10; // CS8852`).
 Açıp derlersen derleyicinin seni nasıl durdurduğunu görürsün.
@@ -62,6 +64,15 @@ Açıp derlersen derleyicinin seni nasıl durdurduğunu görürsün.
    throw ex -> at ...Example10_ExceptionHandling.RethrowWithThrowEx()
 ```
 
+```
+--- 13. Collections ---
+2) 100.000 eleman, 1.000 arama:
+   List.Contains            (O(n)):    390,0 ms
+   HashSet.Contains         (O(1)):      0,2 ms
+   List + FirstOrDefault    (O(n)):    850,9 ms
+   Dictionary.TryGetValue   (O(1)):      0,3 ms
+```
+
 ## Testler
 
 ```bash
@@ -74,8 +85,9 @@ dotnet test CSharpFundamentals.Tests
 - `LinqDeferredTests`: sorgu tanımlanınca çalışmaz, her enumerate'te yeniden çalışır, `ToList` bir kez çalışır, `yield` tembel üretir.
 - `ExceptionRethrowTests`: `throw` hatanın çıktığı metodu korur, `throw ex` siler.
 - `DisposableTests`: `using` bloğu ve `using var` Dispose'u çağırır; exception olsa bile çağırır.
+- `HashCodeEqualityTests`: doğru `GetHashCode`'lu kargo HashSet'e tekrar eklenmez; ikinci `Add` `false` döner; eşit nesnelerin hash'i eşittir.
 
-> Not: Süre ve bellek ölçen kısımlar (Boxing, StringBuilder) ile finalizer'ın ne zaman çalıştığı makineye
+> Not: Süre ve bellek ölçen kısımlar (Boxing, StringBuilder, Collections) ile finalizer'ın ne zaman çalıştığı makineye
 > ve GC'ye bağlı olduğu için test edilmez; yalnızca konsol örneğinde gösterilir.
 
 ## Notlarım ve mülakat soruları
