@@ -1379,3 +1379,174 @@ string aliciAdi = kargo?.Alici?.Ad ?? "Bilinmiyor";
 - **`const` / `readonly` / `static readonly`:** `const` derleme zamanı sabiti, kullanıldığı yere kopyalanır. `readonly` tanımda ya da constructor'da bir kez atanır, her nesnede farklı olabilir. `static readonly` sınıf başına bir kez atanır. `readonly` sığdır.
 - **Nullable:** `int?` değer tipine null verir (`HasValue`, `Value`). Nullable reference types (`string?`) null olabilecek değerleri işaretler, derleyici kontrolsüz kullanımda uyarır.
 - **Null operatörleri:** `?.`, `??`, `??=`; `!` uyarıyı susturur ama kontrol yapmaz.
+
+## 10. Koleksiyon tipleri
+ 
+### Big O
+ 
+Koleksiyonları karşılaştırırken bir işlemin eleman sayısı arttıkça ne kadar yavaşladığını **Big O** ile ifade ederiz:
+ 
+- **O(1), sabit:** Eleman sayısından bağımsız; 10 eleman da 10 milyon da aynı süre.
+- **O(n), doğrusal:** Eleman sayısıyla orantılı; genelde "hepsine tek tek bakmak".
+- **O(log n):** Her adımda aramayı ikiye bölmek; 1 milyon elemanda yaklaşık 20 adım.
+Benzetme: Depoda 10.000 kargo var. Raf numarasını biliyorsan doğrudan gidersin (O(1)); bilmiyorsan tek tek bakarsın (O(n)).
+ 
+### Dizi (`T[]`)
+ 
+```csharp
+string[] subeler = new string[3];   // boyut sabit
+string[] subeler2 = { "Eskişehir", "Ankara", "İstanbul" };
+```
+ 
+Boyutu oluşturulurken belirlenir, sonradan değişmez. Elemanlar bellekte yan yana durur; indeksle erişim O(1).
+ 
+### `List<T>`
+ 
+```csharp
+var kargolar = new List<Kargo>();
+kargolar.Add(new Kargo());          // sona ekle
+kargolar.Insert(0, new Kargo());    // başa ekle (O(n))
+kargolar.RemoveAt(0);               // sil (O(n))
+var ilk = kargolar[0];              // O(1)
+```
+ 
+- Boyutu kendiliğinden büyüyen dizi: içeride bir dizi tutar, dolunca daha büyüğünü açıp kopyalar.
+- İndeksle erişim O(1); sona ekleme çoğunlukla O(1); başa/ortaya ekleme-silme O(n) (elemanlar kaydırılır).
+- **`Contains` ve arama O(n).**
+- Eleman sayısı biliniyorsa `new List<Kargo>(capacity: 10_000)` gereksiz büyütmeyi önler.
+### `Dictionary<TKey, TValue>`
+ 
+```csharp
+var kargolar = new Dictionary<string, Kargo>();
+kargolar["KRG1"] = new Kargo { TakipNo = "KRG1" };   // ekle ya da güncelle
+kargolar.Add("KRG2", new Kargo());                   // anahtar varsa exception
+ 
+var k = kargolar["KRG1"];                            // yoksa KeyNotFoundException
+if (kargolar.TryGetValue("KRG9", out var bulunan))   // güvenli okuma
+    Console.WriteLine(bulunan.TakipNo);
+```
+ 
+- Anahtar–değer çiftleri; anahtarlar benzersiz.
+- Ekleme, arama, silme ortalama **O(1)**.
+- Sıra garantisi yok.
+### `HashSet<T>`
+ 
+```csharp
+var gorulenler = new HashSet<string>();
+gorulenler.Add("KRG1");   // true: eklendi
+gorulenler.Add("KRG1");   // false: zaten var
+bool varMi = gorulenler.Contains("KRG1");   // O(1)
+```
+ 
+- Benzersiz elemanlar kümesi; `Add`, `Contains`, `Remove` ortalama O(1).
+- Küme işlemleri: `UnionWith`, `IntersectWith`, `ExceptWith`.
+- Tipik kullanım: "Bunu daha önce gördüm mü?"
+```csharp
+// YAVAŞ: her kontrol listeyi baştan sona tarar (O(n))
+var islenmisler = new List<string>();
+foreach (var m in mesajlar)
+    if (!islenmisler.Contains(m.ScanId)) { /* işle */ islenmisler.Add(m.ScanId); }
+ 
+// HIZLI: her kontrol O(1)
+var islenmisler2 = new HashSet<string>();
+foreach (var m in mesajlar)
+    if (islenmisler2.Add(m.ScanId)) { /* ilk kez görüldü, işle */ }
+```
+ 
+### `Queue<T>` ve `Stack<T>`
+ 
+```csharp
+var kuyruk = new Queue<string>();   // FIFO: ilk giren ilk çıkar
+kuyruk.Enqueue("KRG1");
+kuyruk.Dequeue();
+ 
+var yigin = new Stack<string>();    // LIFO: son giren ilk çıkar
+yigin.Push("KRG1");
+yigin.Pop();
+```
+ 
+Queue: şubedeki teslimat sırası. Stack: üst üste konmuş koliler, geri alma (undo). Ekleme/çıkarma O(1).
+ 
+| Koleksiyon | Ne zaman? | İndeksle erişim | Arama / `Contains` | Ekleme |
+| --- | --- | --- | --- | --- |
+| Dizi `T[]` | Boyut sabit ve belli | O(1) | O(n) | Yok (boyut sabit) |
+| `List<T>` | Sıralı liste, varsayılan seçim | O(1) | O(n) | Sona O(1), araya O(n) |
+| `Dictionary<K,V>` | Anahtarla hızlı erişim | Yok | Anahtarla O(1) | O(1) |
+| `HashSet<T>` | Benzersizlik, "gördüm mü?" | Yok | O(1) | O(1) |
+| `Queue<T>` | FIFO | Yok | O(n) | O(1) |
+| `Stack<T>` | LIFO | Yok | O(n) | O(1) |
+ 
+Hiçbiri thread-safe değildir; paralel kullanım için concurrent sürümleri vardır.
+ 
+### Koleksiyon interface'leri
+ 
+| Interface | Ne sağlar? |
+| --- | --- |
+| `IEnumerable<T>` | Sadece gezinmek (`foreach`) |
+| `ICollection<T>` | + `Count`, `Add`, `Remove`, `Contains` |
+| `IList<T>` | + indeksle erişim, `Insert` |
+| `IReadOnlyCollection<T>` | `IEnumerable` + `Count`, değiştirme yok |
+| `IReadOnlyList<T>` | + indeksle okuma, değiştirme yok |
+ 
+- Parametrede ihtiyaç duyulan **en az yeteneği** iste (sadece `foreach` yapılıyorsa `IEnumerable<T>`).
+- Çağıranın değiştirmemesi gereken sonuçları `IReadOnlyList<T>` olarak döndür.
+- `IEnumerable<T>` dönerken deferred execution'a dikkat; hesaplanmış sonuç için `IReadOnlyList<T>` daha net.
+### GetHashCode
+ 
+`GetHashCode()` nesneden bir sayı üretir; hash tabanlı koleksiyonlar bu sayıyla nesnenin **hangi rafta (bucket)** duracağını bulur. Benzetme: takip numarasından raf numarasını hesaplayan formül.
+ 
+**Kullanıldığı yerler:** `Dictionary`, `HashSet`, `ConcurrentDictionary`, LINQ'te `Distinct`, `GroupBy`, `ToDictionary`, `Union`.
+ 
+**Arama iki adımdır:**
+ 
+1. `GetHashCode()` ile hangi rafa bakılacağı bulunur.
+2. Rafta birden fazla eleman olabilir (farklı anahtarların aynı rafa düşmesi: **collision**); bunlar `Equals` ile karşılaştırılır.
+**Kural:** `Equals`'a göre eşit olan nesnelerin hash kodu aynı olmalıdır. Tersi gerekmez (collision olabilir).
+ 
+| Tip | Varsayılan GetHashCode neye bakar? |
+| --- | --- |
+| class | Referansa (içeriği aynı iki ayrı nesnenin hash'i farklı) |
+| string | İçeriğe |
+| record | Alanlara (derleyici Equals ile birlikte üretir) |
+| struct | Alanlara (varsayılanı yavaş) |
+| int, Guid | Değere |
+ 
+`Equals` override edilip `GetHashCode` edilmezse:
+ 
+```csharp
+public class Kargo
+{
+    public string TakipNo { get; init; } = "";
+    public override bool Equals(object? obj) => obj is Kargo k && k.TakipNo == TakipNo;
+    // GetHashCode override EDİLMEDİ → hâlâ referansa bakıyor
+}
+ 
+var set = new HashSet<Kargo>();
+set.Add(new Kargo { TakipNo = "KRG1" });
+set.Add(new Kargo { TakipNo = "KRG1" });   // "eşit" ama farklı rafa düştü
+Console.WriteLine(set.Count);              // 2
+```
+ 
+Doğrusu:
+ 
+```csharp
+public override int GetHashCode() => TakipNo.GetHashCode();
+// birden fazla alan için:
+public override int GetHashCode() => HashCode.Combine(TakipNo, SubeKodu);
+```
+ 
+**Tuzak:** Koleksiyona eklenmiş bir nesnenin hash'ini etkileyen alanı değiştirirsen nesne eski rafta kalır ve bulunamaz. Anahtar alanlar değişmez (`init` / `readonly`) olmalıdır.
+ 
+### 💡 Mülakat notu: Koleksiyon tipleri
+ 
+- **Dizi:** Sabit boyut, indeksle O(1).
+- **`List<T>`:** Büyüyen dizi; indeksle O(1), sona ekleme çoğunlukla O(1), araya ekleme/silme ve `Contains` O(n).
+- **`Dictionary<K,V>`:** Anahtar–değer, ekleme/arama/silme ortalama O(1); `TryGetValue` ile güvenli okuma; sıra garantisi yok.
+- **`HashSet<T>`:** Benzersiz elemanlar, `Add`/`Contains` O(1); büyük listede tekrar tekrar `List.Contains` (O(n)) yerine kullanılır.
+- **`Queue<T>`** FIFO, **`Stack<T>`** LIFO, ekleme/çıkarma O(1).
+- Parametrede en az yetenek (`IEnumerable<T>`), salt okunur sonuç için `IReadOnlyList<T>`.
+Örnek: 1 milyon kargoda takip numarasıyla sürekli arama → `Dictionary<string, Kargo>` (O(1)); `List` + `FirstOrDefault` her aramada O(n). Tekrar eden ScanId'leri ayıklamak → `HashSet<string>`: tekrarı engeller ve kontrol O(1).
+ 
+### 💡 Mülakat notu: GetHashCode
+ 
+Hash tabanlı koleksiyonlar (`Dictionary`, `HashSet`, `Distinct`, `GroupBy`) nesnenin kovasını `GetHashCode` ile bulur, kovadaki elemanları `Equals` ile karşılaştırır; bu sayede arama ortalama O(1). Eşit nesnelerin hash kodu aynı olmalıdır; bu yüzden `Equals` override edilirse `GetHashCode` da edilir (`HashCode.Combine`), yoksa `HashSet` aynı kaydı iki kez ekler, `Dictionary` kaydı bulamaz. Class referansa, string içeriğe, record ve struct alanlara göre hash verir. Koleksiyondaki nesnenin hash'ini etkileyen alan değiştirilmemelidir.

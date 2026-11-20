@@ -826,3 +826,103 @@ Evet. `readonly` sığdır: `_liste` başka bir listeye çevrilemez ama gösterd
 `?.` nesne null değilse üyeye erişir, null ise `null` döner. `??` soldaki null ise sağdakini kullanır. `??=` değişken null ise atar. `!` derleyicinin null uyarısını susturur ama kontrol yapmaz; değer gerçekten null'sa yine `NullReferenceException` alınır. Örnek: `kargo?.Alici?.Ad ?? "Bilinmiyor"`.
 
 </details>
+
+## 10. Koleksiyon tipleri ve GetHashCode
+ 
+### ⭐ 10.1 Dizi ile `List<T>` arasındaki fark nedir?
+ 
+<details>
+<summary>Cevap</summary>
+Dizinin boyutu oluşturulurken belirlenir ve değişmez. `List<T>` içeride bir dizi tutar ve dolunca daha büyük bir dizi açıp elemanları kopyalayarak kendiliğinden büyür. İkisinde de indeksle erişim O(1). Boyut sabit ve belliyse dizi, değilse `List<T>` kullanılır.
+ 
+</details>
+### ⭐ 10.2 1 milyon kargoda takip numarasıyla sürekli arama yapılıyor. `List` + `FirstOrDefault` mi, `Dictionary` mi?
+ 
+<details>
+<summary>Cevap</summary>
+`Dictionary<string, Kargo>`, takip numarası anahtar olarak. Anahtarla arama ortalama O(1). `List` + `FirstOrDefault` her aramada listeyi baştan tarar: O(n).
+ 
+</details>
+### ⭐ 10.3 500.000 mesajdan tekrar eden ScanId'leri ayıklamak için hangi koleksiyonu kullanırsın?
+ 
+<details>
+<summary>Cevap</summary>
+`HashSet<string>`. Aynı elemanı iki kez tutmaz ve `Add`/`Contains` ortalama O(1). `if (set.Add(id))` ilk kez görüldüyse `true` döner. `List.Contains` her kontrolde O(n) olduğu için toplamda çok yavaşlar.
+ 
+</details>
+### 10.4 `List<T>`'nin başına eleman eklemek neden yavaştır?
+ 
+<details>
+<summary>Cevap</summary>
+`List<T>` içeride bir dizi tutar; başa ya da ortaya ekleme/silme yapılınca arkadaki bütün elemanların bir yer kaydırılması gerekir: O(n). Sona ekleme ise çoğunlukla O(1).
+ 
+</details>
+### ⭐ 10.5 Dictionary'de anahtarla arama neden O(1)?
+ 
+<details>
+<summary>Cevap</summary>
+Dictionary hash tabanlıdır. Anahtarın `GetHashCode()` değeriyle hangi kovaya (bucket) bakılacağı doğrudan hesaplanır; bütün elemanlara bakılmaz. Aynı kovaya düşen anahtarlar (collision) `Equals` ile karşılaştırılır.
+ 
+</details>
+### 10.6 `dictionary["KRG9"]` ile `dictionary.TryGetValue("KRG9", out var k)` farkı nedir?
+ 
+<details>
+<summary>Cevap</summary>
+İndeksleyici anahtar yoksa `KeyNotFoundException` fırlatır. `TryGetValue` anahtar yoksa `false` döner, exception fırlatmaz. Anahtarın olmayabileceği durumlarda `TryGetValue` kullanılır.
+ 
+</details>
+### 10.7 `Queue<T>` ile `Stack<T>` farkı nedir?
+ 
+<details>
+<summary>Cevap</summary>
+`Queue<T>` FIFO'dur: ilk giren ilk çıkar (`Enqueue`/`Dequeue`), ör. teslimat sırası. `Stack<T>` LIFO'dur: son giren ilk çıkar (`Push`/`Pop`), ör. geri alma (undo). İkisinde de ekleme/çıkarma O(1).
+ 
+</details>
+### 10.8 Metot parametresi olarak `List<T>` yerine neden `IEnumerable<T>` alınır? Dönüşte `IReadOnlyList<T>` ne zaman tercih edilir?
+ 
+<details>
+<summary>Cevap</summary>
+Parametrede ihtiyaç duyulan en az yetenek istenir; metot sadece `foreach` yapıyorsa `IEnumerable<T>` alınır, böylece çağıran dizi, liste, HashSet verebilir. Dönüşte çağıranın listeyi değiştirmemesi isteniyorsa `IReadOnlyList<T>` döndürülür; `IEnumerable<T>` dönmek deferred execution yüzünden sorgunun tekrar tekrar çalışmasına yol açabilir.
+ 
+</details>
+### ⭐ 10.9 GetHashCode nedir, nerelerde kullanılır?
+ 
+<details>
+<summary>Cevap</summary>
+Nesneden bir sayı üretir; hash tabanlı koleksiyonlar (`Dictionary`, `HashSet`, `ConcurrentDictionary`, LINQ'in `Distinct`, `GroupBy`, `ToDictionary`) bu sayıyla nesnenin hangi kovada duracağını bulur. Arama: önce hash ile kova bulunur, sonra kovadaki elemanlar `Equals` ile karşılaştırılır.
+ 
+</details>
+### 🧩 10.10 `Count` kaç olur?
+ 
+```csharp
+public class Kargo
+{
+    public string TakipNo { get; init; } = "";
+    public override bool Equals(object? obj) => obj is Kargo k && k.TakipNo == TakipNo;
+}
+ 
+var set = new HashSet<Kargo>();
+set.Add(new Kargo { TakipNo = "KRG1" });
+set.Add(new Kargo { TakipNo = "KRG1" });
+Console.WriteLine(set.Count);
+```
+ 
+<details>
+<summary>Cevap</summary>
+`2`. `Equals` override edilmiş ama `GetHashCode` edilmemiş; hash hâlâ referansa göre üretiliyor. "Eşit" sayılan iki kargo farklı kovalara düşer ve HashSet ikisini de ekler. Çözüm: `public override int GetHashCode() => TakipNo.GetHashCode();`.
+ 
+</details>
+### 10.11 Bir nesneyi HashSet'e ekledikten sonra hash'ini etkileyen alanını değiştirirsen ne olur?
+ 
+<details>
+<summary>Cevap</summary>
+Nesne eski hash'e göre kovaya konmuştu; alan değişince hash değişir ama nesne eski kovada kalır. `Contains` yeni hash'e göre başka kovaya bakar ve nesneyi bulamaz. Bu yüzden anahtar olarak kullanılan alanlar değişmez (`init` / `readonly`) olmalıdır.
+ 
+</details>
+### 10.12 Record bir referans tipi mi? Class'tan farkı ne?
+ 
+<details>
+<summary>Cevap</summary>
+Evet, record bir referans tipidir: değişken adres tutar, atamada aynı nesne paylaşılır. Farkı, derleyicinin `==`, `Equals` ve `GetHashCode`'u alanlara bakacak şekilde üretmesi, özellikleri `init` yapması ve `with` ile okunur `ToString` eklemesidir. Yani record, eşitliği değere göre olan değişmez bir class'tır. Tamamen değer tipi olanı `record struct`'tır.
+ 
+</details>
